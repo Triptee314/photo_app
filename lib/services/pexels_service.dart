@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 import '../models/photo.dart';
 
 class PexelsService {
-  static const String apiKey = 'wve6UOBY9G3QySferJSWAN8CnSzT2ydywn8Y4pB4dYm63kfASipd6v33';
+  static const String apiKey =
+    String.fromEnvironment('PEXELS_API_KEY');
 
   Future<List<Photo>> getCuratedPhotos({
     int page = 1,
