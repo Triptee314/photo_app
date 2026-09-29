@@ -1,0 +1,35 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
+import '../models/photo.dart';
+
+class PexelsService {
+  static const String apiKey = 'wve6UOBY9G3QySferJSWAN8CnSzT2ydywn8Y4pB4dYm63kfASipd6v33';
+
+  Future<List<Photo>> getCuratedPhotos({
+    int page = 1,
+    int perPage = 20,
+  }) async {
+    final response = await http.get(
+      Uri.parse(
+        'https://api.pexels.com/v1/curated?page=$page&per_page=$perPage',
+      ),
+      headers: {
+        'Authorization': apiKey,
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to load photos');
+    }
+
+    final data = jsonDecode(response.body);
+
+    final List photosJson = data['photos'];
+
+    return photosJson
+        .map((photoJson) => Photo.fromJson(photoJson))
+        .toList();
+  }
+}
