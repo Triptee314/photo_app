@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'providers/saved_provider.dart';
+import 'providers/theme_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,9 +15,16 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
- runApp(
-  ChangeNotifierProvider(
-    create: (context) => SavedProvider(),
+runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => SavedProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => ThemeProvider(),
+      ),
+    ],
     child: const MyApp(),
   ),
 );
@@ -27,8 +35,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+
     return MaterialApp(
-      home: SplashScreen(),
+      title: 'PhotoFlow',
+
+      theme: ThemeData(
+        brightness: Brightness.light,
+        colorSchemeSeed: Colors.blue,
+      ),
+
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorSchemeSeed: Colors.blue,
+      ),
+
+      themeMode: themeProvider.themeMode,
+
+      home: const SplashScreen(),
     );
   }
 }

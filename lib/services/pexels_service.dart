@@ -33,4 +33,34 @@ class PexelsService {
         .map((photoJson) => Photo.fromJson(photoJson))
         .toList();
   }
+
+  Future<List<Photo>> searchPhotos({
+  required String query,
+  int page = 1,
+  int perPage = 20,
+}) async {
+  final response = await http.get(
+     Uri.parse(
+      'https://api.pexels.com/v1/search'
+      '?query=${Uri.encodeComponent(query)}'
+      '&page=$page'
+      '&per_page=$perPage',
+    ),
+    headers: {
+      'Authorization': apiKey,
+    },
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception('Failed to search photos');
+  }
+
+  final data = jsonDecode(response.body);
+
+  final List photosJson = data['photos'];
+
+  return photosJson
+      .map((photoJson) => Photo.fromJson(photoJson))
+      .toList();
+}
 }

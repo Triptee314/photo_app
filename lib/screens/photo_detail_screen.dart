@@ -49,16 +49,30 @@ const SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
   child: ElevatedButton.icon(
-    onPressed: () {
-      context.read<SavedProvider>().toggleSave(photo.id);
+  onPressed: () async {
+    await context.read<SavedProvider>().toggleSave(photo);
+  },
+  icon: AnimatedSwitcher(
+    duration: const Duration(milliseconds: 250),
+    transitionBuilder: (child, animation) {
+      return ScaleTransition(
+        scale: animation,
+        child: child,
+      );
     },
-    icon: Icon(
+    child: Icon(
       isSaved ? Icons.bookmark : Icons.bookmark_border,
+      key: ValueKey(isSaved),
     ),
-    label: Text(
+  ),
+  label: AnimatedSwitcher(
+    duration: const Duration(milliseconds: 200),
+    child: Text(
       isSaved ? 'Saved' : 'Save',
-              ),
-            ),
+      key: ValueKey(isSaved),
+    ),
+  ),
+)
           ),
         ],
         ),
